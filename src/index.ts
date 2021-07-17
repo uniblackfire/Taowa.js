@@ -79,7 +79,6 @@ class Interpreter {
   // }
 
   step() {
-    debugger
     if (!this.stateStack.length) {
       return;
     }

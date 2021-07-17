@@ -8,6 +8,7 @@
   ],
   "scripts": {
     "dev": "rollup -c",
+    "watch": "rollup -c --watch",
     "build": "cross-env NODE_ENV=production rollup -c",
     "test": "jest"
   },
