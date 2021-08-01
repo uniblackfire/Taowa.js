@@ -4,18 +4,18 @@ import {Program, ArrayExpression} from './NodeHandler';
 import {Completion, DEFAULT_OPTIONS} from './constant';
 import State from './state';
 
-const NodeHandler = {
-  Program,
-  ArrayExpression,
-} as {
-  [key: string]: typeof Program | typeof ArrayExpression
-};
-
 function getNodeHandler(name: string): Function {
+  const NodeHandler = {
+    Program,
+    ArrayExpression,
+  } as {
+    [key: string]: typeof Program | typeof ArrayExpression
+  };
   return NodeHandler[name];
 }
 
 class Scope {
+
 }
 
 class InterpreterObject {
@@ -33,7 +33,6 @@ class Interpreter {
   private paused: boolean = false;
   private polyfills: Array<Function> = [];
   private stateStack: Array<State> = [];
-  // private expressionProcessors: Map<string, Function> = new Map<string, Function>();
   private globalScope: object;
   private globalObject: object;
 
@@ -41,19 +40,8 @@ class Interpreter {
   constructor(code: string, options: Options = DEFAULT_OPTIONS) {
     this.code = code;
     this.options = options;
-
     this.parsedCode = acorn.parse(this.code, this.options);
     this.ast = acorn.parse(this.code, this.options);
-
-    // this.initExpressionProcessor();
-    // for (const prop in this) {
-    //   console.log('this prop >>> ' + prop);
-    //   const fun = this[prop];
-    //   let methodName;
-    //   if (typeof fun === 'function' && (methodName = prop.match(/^step([A-Z]\w*)$/))) {
-    //     this.expressionProcessors.set(methodName[1], fun.bind(this));
-    //   }
-    // }
 
     this.globalScope = this.createScope(this.ast);
     // @ts-ignore
@@ -94,8 +82,6 @@ class Interpreter {
       }
       let nextState;
       try {
-        console.log('LJP: %c%s >>> ', 'background:#ff9912;color:white;font-size:20px', 'type', type);
-        debugger
         nextState = getNodeHandler(type)(this.stateStack, state, state.node);
       } catch (e) {
         // Eat any step errors.  They have been thrown on the stack.
