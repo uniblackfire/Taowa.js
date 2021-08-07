@@ -33,7 +33,7 @@ class Interpreter {
   private paused: boolean = false;
   private polyfills: Array<Function> = [];
   private stateStack: Array<State> = [];
-  private globalScope: object;
+  private globalScope: Scope;
   private globalObject: object;
 
 
@@ -48,16 +48,13 @@ class Interpreter {
     this.globalObject = this.globalScope.object;
     const parsedPolyfill = acorn.parse(this.polyfills.join('\n'), DEFAULT_OPTIONS)
 
-    // this.stripLocations(parsedPolyfill);
-
     this.stateStack = [new State(parsedPolyfill, this.globalScope)];
-    debugger
     this.run();
 
     this.stateStack = [new State(this.ast, this.globalScope)];
   }
 
-  createScope(ast: Node): object {
+  createScope(ast: Node): Scope {
 
     return {object: 1};
   }
@@ -71,10 +68,10 @@ class Interpreter {
       return;
     }
 
-    const state = this.stateStack[this.stateStack.length - 1];
-    let start = state.node.start;
-    let end = state.node.end;
-    const startTime = Date.now();
+    const state: State = this.stateStack[this.stateStack.length - 1];
+    let start: number = state.node.start;
+    let end: number = state.node.end;
+    const startTime: number = Date.now();
     do {
       const type: string = state.node['type'];
       if ((type === 'Program' && state.done) || this.paused) {
@@ -106,7 +103,9 @@ class Interpreter {
   }
 
   run() {
-
+    while (!this.paused && this.step()) {
+    }
+    return this.paused;
   }
 }
 

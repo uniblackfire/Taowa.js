@@ -10,7 +10,6 @@ export const ArrayExpression: NodeHandler = function (stateStack, state, node) {
 }
 
 export const Program: NodeHandler = function (stateStack, state, node) {
-  // @ts-ignore
   const expression = node['body'].shift();
   if (expression) {
     state.done = false;
